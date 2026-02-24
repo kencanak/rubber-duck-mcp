@@ -1,0 +1,48 @@
+{
+  "name": "rubber-duck-mcp",
+  "version": "1.0.0",
+  "description": "local rubber ducking mcp server",
+  "main": "dist/index.js",
+  "engines": {
+    "node": "24.13.1",
+    "npm": "11.8.0"
+  },
+  "type": "module",
+  "scripts": {
+    "start": "npm run build && node dist/index.js",
+    "build": "tsc",
+    "lint": "eslint src/",
+    "lint:fix": "eslint src/ --fix",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kencanak/rubber-duck-mcp.git"
+  },
+  "keywords": [
+    "mcp",
+    "rubber",
+    "duck",
+    "node"
+  ],
+  "author": "Kencana Kesuma",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/kencanak/rubber-duck-mcp/issues"
+  },
+  "homepage": "https://github.com/kencanak/rubber-duck-mcp#readme",
+  "devDependencies": {
+    "@eslint/eslintrc": "^3.3.4",
+    "@types/node": "^25.3.0",
+    "@typescript-eslint/eslint-plugin": "^8.56.1",
+    "@typescript-eslint/parser": "^8.56.1",
+    "eslint": "^10.0.2",
+    "eslint-config-google": "^0.14.0",
+    "tsx": "^4.21.0",
+    "typescript": "^5.9.3"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.27.0",
+    "zod": "^4.3.6"
+  }
+}
