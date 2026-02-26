@@ -18,4 +18,4 @@
     }
     ```
 3. start claude in vscode, but before that, make sure you are running node 24. at least node 16 and above
-4. <video src="https://github.com/kencanak/rubber-duck-mcp/raw/refs/heads/main/docs-assets/running-rubber-duck-mcp.mov" controls width="100%"></video>
+4. [video ref](https://github.com/kencanak/rubber-duck-mcp/raw/refs/heads/main/docs-assets/running-rubber-duck-mcp.mov)
