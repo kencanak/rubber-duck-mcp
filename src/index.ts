@@ -1,6 +1,8 @@
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
 import { registerHelloWorldTool } from './tools/hello-world.js';
+import { registerRecallTool } from './tools/duck-recall.js';
+
 
 const server = new McpServer({
   name: 'RubberDuckMCPServer',
@@ -8,6 +10,7 @@ const server = new McpServer({
 });
 
 registerHelloWorldTool(server);
+registerRecallTool(server);
 
 async function main() {
   const transport = new StdioServerTransport();

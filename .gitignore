@@ -138,6 +138,7 @@ dist
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
 
-.claude
+.claude/*
+!.claude/claude.md
 .mcp.json
 duck-recall.db
