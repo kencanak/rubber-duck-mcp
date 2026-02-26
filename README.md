@@ -8,7 +8,7 @@ A project-specific, persistent developer memory system. It allows developers and
 - why?
 
   - Captures institutional knowledge: Store decisions about architecture, tooling, or coding conventions.
-  - Speeds up onboarding: New team members or assistants can recall previous decisions instantly.
+  - Speeds up onboarding: New team members or assistants can recall previous decisions instantly. (THOUGH, it's still stored in local db - to be evolved)
   - Reduces repetition: Avoid re-explaining recurring problems or solutions.
   - Supports AI-assisted development: AI agents can recall relevant memories to provide smarter suggestions and context-aware guidance.
 
