@@ -11,7 +11,7 @@
       "mcpServers": {
         "rubber-duck": {
           "command": "bash",
-          "args": ["-c", "HOT_RELOAD=false ./run.sh"],
+          "args": ["-c", "./run.sh"],
           "cwd": "[PATH TO LOCAL MCP SERVER]"
         }
       }

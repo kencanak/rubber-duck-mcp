@@ -140,3 +140,4 @@ vite.config.ts.timestamp-*
 
 .claude
 .mcp.json
+duck-recall.db
