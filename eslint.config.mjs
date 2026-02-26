@@ -7,7 +7,7 @@ const compat = new FlatCompat();
 export default [
   ...compat.extends('google'),
   {
-    files: ['src/**/*.ts'],
+    files: ['src/**/*.ts', 'script/**/*.ts'],
     languageOptions: {
       parser: tsParser,
       parserOptions: {

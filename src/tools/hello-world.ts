@@ -1,6 +1,13 @@
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { z } from 'zod';
 
+export const helloWorldHandler = async ({ name }: { name?: string | undefined }) => ({
+  content: [{
+    type: 'text' as const,
+    text: `Hello, ${name ?? 'World'}!`,
+  }],
+});
+
 export function registerHelloWorldTool(server: McpServer) {
   server.registerTool(
     'hello-world',
@@ -10,11 +17,6 @@ export function registerHelloWorldTool(server: McpServer) {
         name: z.string().optional().describe('Name to greet'),
       },
     },
-    async ({ name }) => ({
-      content: [{
-        type: 'text' as const,
-        text: `Hello, ${name ?? 'World'}!`,
-      }],
-    }),
+    helloWorldHandler,
   );
 }

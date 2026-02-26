@@ -7,6 +7,7 @@
   },
   "include": [
     "src/**/*.ts",
+    "script/**/*.ts"
   ],
   "exclude": [
     "node_modules/**/*.*",
@@ -20,9 +21,13 @@
 
     // Environment Settings
     // See also https://aka.ms/tsconfig/module
-    "module": "nodenext",
-    "target": "esnext",
-    "types": [],
+
+    "module": "esnext",
+    "moduleResolution": "node",
+    "target": "ES2022",
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "types": ["node", "better-sqlite3"],
     // For nodejs:
     // "lib": ["esnext"],
     // "types": ["node"],

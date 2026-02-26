@@ -9,11 +9,11 @@
   },
   "type": "module",
   "scripts": {
-    "start": "npm run build && node dist/index.js",
+    "start": "npx tsx watch src/index.ts",
+    "test": "npx tsx scripts/test.ts",
     "build": "tsc",
     "lint": "eslint src/",
-    "lint:fix": "eslint src/ --fix",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "lint:fix": "eslint src/ --fix"
   },
   "repository": {
     "type": "git",
@@ -33,6 +33,7 @@
   "homepage": "https://github.com/kencanak/rubber-duck-mcp#readme",
   "devDependencies": {
     "@eslint/eslintrc": "^3.3.4",
+    "@types/better-sqlite3": "^7.6.13",
     "@types/node": "^25.3.0",
     "@typescript-eslint/eslint-plugin": "^8.56.1",
     "@typescript-eslint/parser": "^8.56.1",
@@ -43,6 +44,7 @@
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.27.0",
+    "better-sqlite3": "^12.6.2",
     "zod": "^4.3.6"
   }
 }
