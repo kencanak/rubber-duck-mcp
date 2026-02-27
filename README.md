@@ -39,4 +39,5 @@ A project-specific, persistent developer memory system. It allows developers and
 1. rename `.mcp.json.sample` > `.mcp.json`, then copy it to your respective project folder. which ever project that you want to use this mcp server with
 2. copy `claude.md` from `.claude` folder to the respective project folder.
 3. for some reason, claude doesn't always read the `claude.md` file. so, we might need to nudge it.
+4. [video ref](https://github.com/kencanak/rubber-duck-mcp/raw/refs/heads/main/docs-assets/demo.mov)
 
