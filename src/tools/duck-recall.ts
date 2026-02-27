@@ -35,7 +35,19 @@ export function registerRecallTool(server: McpServer) {
   server.registerTool(
     'duck-recall',
     {
-      description: 'Store, recall, and manage developer recall',
+      description: `
+      Persistent development memory system.
+
+      Use this tool to store stable project knowledge:
+      - architecture decisions
+      - conventions
+      - tooling setup
+      - non-obvious debugging discoveries
+
+      Do NOT store temporary questions or one-off fixes.
+
+      Prefer recalling relevant memories before answering complex project questions.
+      `,
       inputSchema: recallToolSchema,
     },
     async ({ action, data }) => {
