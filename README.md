@@ -1,4 +1,7 @@
 # rubber-duck-mcp
+I am your persistent, project-aware coding assistant. It helps developers remember, automate, and orchestrate project tasks. (eventually, ha)
+
+think of it as a smart rubber duck for your code — it listens, remembers, and helps you get things done efficiently.
 
 ## Available tools
 1. duck-recall
@@ -28,6 +31,23 @@ A project-specific, persistent developer memory system. It allows developers and
   - instead of writing memory into a markdown file, i find it cleaner if we store it into DB
   - which then can be evolved to vectorised db, a vectorized DB stores embedding vectors of memory content and allows semantic similarity search rather than literal text match. but of course, this comes with complexity
   - hoping that we can use less token? ha
+
+TODO:
+add a couple more tools:
+1. parallel development orchestration hub - where each “agent” is a lightweight process acting on a separate workspace (Git worktree) to perform parallel tasks.
+  - Each agent gets its own Git worktree (or branch) to avoid conflicts.
+  - MCP orchestrates agents with a task queue:
+    - lint & fix
+    - feature development
+    - bug investigation
+    - test & deploy
+  - Agents can read project memory from Duck-Recall and update it if needed.
+  - Results are PRs
+2. create a workflow runner?
+3. task scheduler?
+  - daily code analysis: run linters, tests, and code complexity reports every night.
+  - memory cleanup: archive or reinforce old duck-recall memories periodically.
+  - auto-deploy branches: on commit to a staging branch, trigger workflow that builds and deploys.
 
 
 ## Running rubber-duck-mcp locally
