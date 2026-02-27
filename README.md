@@ -24,6 +24,12 @@ A project-specific, persistent developer memory system. It allows developers and
 - with Claude:
     we set a base prompt. available in `.claude/claude.md`
 
+- motivation behind this:
+  - instead of writing memory into a markdown file, i find it cleaner if we store it into DB
+  - which then can be evolved to vectorised db, a vectorized DB stores embedding vectors of memory content and allows semantic similarity search rather than literal text match. but of course, this comes with complexity
+  - hoping that we can use less token? ha
+
+
 ## Running rubber-duck-mcp locally
 
 ### Pre-requisites
