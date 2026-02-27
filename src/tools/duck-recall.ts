@@ -3,8 +3,6 @@ import { z } from 'zod';
 import { RecallDB } from '../recall/recall.db.js';
 import { RecallMerge } from '../recall/recall.merge.js';
 import type { RecallRecord } from '../recall/recall.types.js';
-import path from 'node:path';
-import process from 'node:process';
 
 const recallDB = new RecallDB();
 const recallMerge = new RecallMerge(recallDB);
@@ -14,6 +12,7 @@ const recallToolSchema = z.object({
     'store: save new memory | recall: get all memories for project | search: find by keyword | ' +
     'reinforce: confirm a memory | contradict: flag wrong memory | archive: hide memory | list: list all memories',
   ),
+  projectId: z.string().describe('The current project folder name (e.g. path.basename(cwd))'),
   data: z.object({
     // store fields
     summary: z.string().optional().describe('Summary of the memory (required for store)'),
@@ -47,9 +46,7 @@ export function registerRecallTool(server: McpServer) {
       inputSchema: recallToolSchema,
     },
     async (input) => {
-      const projectId = path.basename(process.cwd());
-
-      const { action, data } = input;
+      const { action, projectId, data } = input;
 
       switch (action) {
       case 'store': {

@@ -42,3 +42,12 @@ When storing memory include:
 - category
 - confidence
 - related files if known
+
+---
+
+DUCK-RECALL TOOL USAGE
+
+Always pass `projectId` as an explicit parameter in every duck-recall tool call.
+Use `projectId = path.basename(cwd)` — derive it from the current working directory on the client side.
+
+Example: `{ action: "search", projectId: "my-project", data: { query: "..." } }`
