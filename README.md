@@ -16,6 +16,7 @@ A project-specific, persistent developer memory system. It allows developers and
 
   - Store Memory: You or an AI can store a memory with a summary, category, confidence, and optionally files to reference.
   - Recall Memory: Memories can be retrieved for the current project, sorted by confidence and recent usage.
+  - Search Memory: Memories can be search by query. this way, we avoid using all search result as token
   - Reinforce or Contradict: Update confidence based on confirmations or corrections, keeping the memory relevant.
   - Archive: Retire outdated or irrelevant memories.
   - Everything is scoped per project, so memories are automatically relevant to the current working directory without needing global identifiers. This allows AI assistants to provide context-aware responses and maintain a persistent understanding of project-specific knowledge.

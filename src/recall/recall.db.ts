@@ -32,6 +32,24 @@ export class RecallDB {
       now,
     );
 
+    // normalize file paths for FTS search
+    const filesText = input.files ? input.files
+      .map((f) => f.replace(/[\/\\.]/g, ' '))
+      .join(' ') : '';
+
+    const summaryText = input.summary.replace(/[^\w\s]/g, ' ');
+
+    // add to search index
+    db.prepare(`
+      INSERT INTO memories_fts (id, summary, category, files)
+      VALUES (?, ?, ?, ?)
+    `).run(
+      id,
+      summaryText,
+      input.category,
+      filesText,
+    );
+
     return this.getById(id)!;
   }
 
@@ -44,10 +62,32 @@ export class RecallDB {
     const stmt = db.prepare(`
       SELECT * FROM memories
       WHERE archived = 0
-        AND (projectId = ? OR projectId IS NULL)
+        AND (projectId = ?)
       ORDER BY confidence DESC, lastAccessed DESC
     `);
     return stmt.all(projectId ?? null).map(this.mapRow);
+  }
+
+  recallByQuery(query: string, projectId: string, limit = 10): RecallRecord[] {
+    const safeQuery = this.normalizeFTSQuery(query);
+
+    const stmt = db.prepare(`
+      SELECT m.*, bm25(memories_fts) AS score
+      FROM memories_fts
+      JOIN memories m ON m.id = memories_fts.id
+      WHERE memories_fts MATCH ?
+        AND m.archived = 0
+        AND m.projectId = ?
+      ORDER BY
+        score ASC,
+        m.confidence DESC,
+        m.lastAccessed DESC
+      LIMIT ?
+    `);
+
+    return stmt
+      .all(safeQuery, projectId, limit)
+      .map(this.mapRow);
   }
 
   reinforce(id: string) {
@@ -74,6 +114,9 @@ export class RecallDB {
 
   archive(id: string) {
     db.prepare('UPDATE memories SET archived = 1 WHERE id = ?').run(id);
+
+    // remove from search index
+    db.prepare('DELETE FROM memories_fts WHERE id = ?').run(id);
   }
 
   list(category?: string): RecallRecord[] {
@@ -102,6 +145,30 @@ export class RecallDB {
       updates.lastAccessed ?? Date.now(),
       id,
     );
+
+    // normalize file paths for FTS search
+    const filesText = updates.files ? updates.files
+      .map((f) => f.replace(/[\/\\.]/g, ' '))
+      .join(' ') : '';
+
+    // update search index
+    db.prepare(`
+      UPDATE memories_fts
+      SET files = ?
+      WHERE id = ?
+    `).run(
+      filesText,
+      id,
+    );
+  }
+
+  private normalizeFTSQuery(input: string): string {
+    return input
+      .toLowerCase()
+      .replace(/[^\w\s]/g, ' ') // remove punctuation
+      .split(/\s+/)
+      .filter(Boolean)
+      .join(' ');
   }
 
   private mapRow(row: any): RecallRecord {

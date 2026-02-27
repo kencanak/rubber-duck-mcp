@@ -17,7 +17,15 @@ const storeSchema = z.object({
 });
 
 const recallToolSchema = z.object({
-  action: z.enum(['store', 'recall', 'reinforce', 'contradict', 'archive', 'list']),
+  action: z.enum([
+    'store',
+    'recall',
+    'reinforce',
+    'contradict',
+    'archive',
+    'list',
+    'search',
+  ]),
   data: z.any(), // refine per action if needed
 });
 
@@ -59,6 +67,25 @@ export function registerRecallTool(server: McpServer) {
             {
               type: 'text',
               text: JSON.stringify(recall, null, 2),
+            },
+          ],
+        };
+      }
+
+      case 'search': {
+        const projectId = path.basename(process.cwd());
+        const query: string = data.query;
+
+        const results = recallDB.recallByQuery(
+          query,
+          projectId,
+        );
+
+        return {
+          content: [
+            {
+              type: 'text',
+              text: JSON.stringify(results, null, 2),
             },
           ],
         };

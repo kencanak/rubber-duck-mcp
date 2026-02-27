@@ -99,6 +99,18 @@ async function main() {
     console.log('Reinforce response:', reinforceResp.result ?? reinforceResp.error);
   }
 
+  const searchResp = await sendRequest('tools/call', {
+    name: 'duck-recall',
+    arguments: {
+      action: 'search',
+      data: {
+        query: 'persistent memory storage local',
+      },
+    },
+  });
+
+  console.log('Search response:', searchResp.result ?? searchResp.error);
+
   const listResp = await sendRequest('tools/call', {
     name: 'duck-recall',
     arguments: {

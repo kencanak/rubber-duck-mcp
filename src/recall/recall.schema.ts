@@ -28,3 +28,13 @@ ON memories(confidence);
 CREATE INDEX IF NOT EXISTS idx_project
 ON memories(projectId);
 `;
+
+export const createSearchIndexVirtualTable = `
+CREATE VIRTUAL TABLE IF NOT EXISTS memories_fts USING fts5(
+  id UNINDEXED,
+  summary,
+  category,
+  files,
+  tokenize='porter unicode61'
+);
+`;
