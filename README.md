@@ -43,7 +43,7 @@ A project-specific, persistent developer memory system. It allows developers and
   - Everything is scoped per project, so memories are automatically relevant to the current working directory without needing global identifiers. This allows AI assistants to provide context-aware responses and maintain a persistent understanding of project-specific knowledge.
 
 #### c. with Claude:
-    we set a base prompt. available in `.claude/claude.md`
+  we set a base prompt. available in `.claude/claude.md`
 
 #### d. motivation behind this:
   - instead of writing memory into a markdown file, i find it cleaner if we store it into DB
