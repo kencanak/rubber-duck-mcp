@@ -1,9 +1,8 @@
 {
   "mcpServers": {
     "rubber-duck": {
-      "command": "bash",
-      "args": ["-c", "./run.sh"],
-      "cwd": "[PATH TO LOCAL MCP SERVER]"
+      "type": "http",
+      "url": "http://localhost:3000/rubber-duck-mcp"
     }
   }
 }

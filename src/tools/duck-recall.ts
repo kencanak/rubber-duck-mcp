@@ -2,36 +2,32 @@ import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { z } from 'zod';
 import { RecallDB } from '../recall/recall.db.js';
 import { RecallMerge } from '../recall/recall.merge.js';
-import type { RecallInput, RecallRecord } from '../recall/recall.types.js';
+import type { RecallRecord } from '../recall/recall.types.js';
 import path from 'node:path';
 import process from 'node:process';
 
 const recallDB = new RecallDB();
 const recallMerge = new RecallMerge(recallDB);
 
-const storeSchema = z.object({
-  summary: z.string(),
-  category: z.string(),
-  confidence: z.number(),
-  files: z.array(z.string()).optional().transform((item) => item ?? []),
-});
-
 const recallToolSchema = z.object({
-  action: z.enum([
-    'store',
-    'recall',
-    'reinforce',
-    'contradict',
-    'archive',
-    'list',
-    'search',
-  ]),
-  data: z.any(), // refine per action if needed
+  action: z.enum(['store', 'recall', 'search', 'reinforce', 'contradict', 'archive', 'list']).describe(
+    'store: save new memory | recall: get all memories for project | search: find by keyword | ' +
+    'reinforce: confirm a memory | contradict: flag wrong memory | archive: hide memory | list: list all memories',
+  ),
+  data: z.object({
+    // store fields
+    summary: z.string().optional().describe('Summary of the memory (required for store)'),
+    category: z.string().optional().describe('Category label e.g. "architecture", "tooling" (required for store)'),
+    confidence: z.number().optional().describe('Confidence score 0.0-1.0 (required for store)'),
+    files: z.array(z.string()).optional().describe('Related file paths (optional for store)'),
+    // search field
+    query: z.string().optional().describe('Search query string (required for search)'),
+    // id-based actions
+    id: z.string().optional().describe('Memory ID (required for reinforce, contradict, archive)'),
+  }).optional(),
 });
 
 export function registerRecallTool(server: McpServer) {
-  console.error('registered recall tool');
-
   server.registerTool(
     'duck-recall',
     {
@@ -50,101 +46,83 @@ export function registerRecallTool(server: McpServer) {
       `,
       inputSchema: recallToolSchema,
     },
-    async ({ action, data }) => {
-      // generate projectId from current folder
+    async (input) => {
       const projectId = path.basename(process.cwd());
+
+      const { action, data } = input;
 
       switch (action) {
       case 'store': {
-        const parsed: RecallInput = storeSchema.parse(data);
+        if (!data?.summary || !data?.category || data?.confidence === undefined) {
+          return {
+            content: [{ type: 'text', text: 'Error: store requires data.summary, data.category, and data.confidence' }],
+          };
+        }
         const memory: RecallRecord = recallMerge.storeMemory({
-          ...parsed,
+          summary: data.summary,
+          category: data.category,
+          confidence: data.confidence,
+          files: data.files ?? [],
           projectId,
         });
-
         return {
-          content: [
-            {
-              type: 'text',
-              text: JSON.stringify(memory, null, 2),
-            },
-          ],
+          content: [{ type: 'text', text: JSON.stringify(memory, null, 2) }],
         };
       }
 
       case 'recall': {
         const recall: RecallRecord[] = recallDB.recall(projectId);
         return {
-          content: [
-            {
-              type: 'text',
-              text: JSON.stringify(recall, null, 2),
-            },
-          ],
+          content: [{ type: 'text', text: JSON.stringify(recall, null, 2) }],
         };
       }
 
       case 'search': {
-        const projectId = path.basename(process.cwd());
-        const query: string = data.query;
-
-        const results = recallDB.recallByQuery(
-          query,
-          projectId,
-        );
-
+        if (!data?.query) {
+          return { content: [{ type: 'text', text: 'Error: search requires data.query' }] };
+        }
+        const results = recallDB.recallByQuery(data.query, projectId);
         return {
-          content: [
-            {
-              type: 'text',
-              text: JSON.stringify(results, null, 2),
-            },
-          ],
+          content: [{ type: 'text', text: JSON.stringify(results, null, 2) }],
         };
       }
 
       case 'reinforce': {
-        const id: string = data.id;
-        recallDB.reinforce(id);
+        if (!data?.id) {
+          return { content: [{ type: 'text', text: 'Error: reinforce requires data.id' }] };
+        }
+        recallDB.reinforce(data.id);
         return {
-          content: [{ type: 'text', text: `recall ${id} reinforced.` }],
+          content: [{ type: 'text', text: `recall ${data.id} reinforced.` }],
         };
       }
 
       case 'contradict': {
-        const id: string = data.id;
-        recallDB.contradict(id);
+        if (!data?.id) {
+          return { content: [{ type: 'text', text: 'Error: contradict requires data.id' }] };
+        }
+        recallDB.contradict(data.id);
         return {
-          content: [{ type: 'text', text: `recall ${id} contradicted.` }],
+          content: [{ type: 'text', text: `recall ${data.id} contradicted.` }],
         };
       }
 
       case 'archive': {
-        const id: string = data.id;
-        recallDB.archive(id);
+        if (!data?.id) {
+          return { content: [{ type: 'text', text: 'Error: archive requires data.id' }] };
+        }
+        recallDB.archive(data.id);
         return {
-          content: [{ type: 'text', text: `recall ${id} archived.` }],
+          content: [{ type: 'text', text: `recall ${data.id} archived.` }],
         };
       }
 
       case 'list': {
         const recall: RecallRecord[] = recallDB.list();
         return {
-          content: [
-            {
-              type: 'text',
-              text: JSON.stringify(recall, null, 2),
-            },
-          ],
+          content: [{ type: 'text', text: JSON.stringify(recall, null, 2) }],
         };
       }
-
-      default:
-        return {
-          content: [
-            { type: 'text', text: `unknown action: ${action}` },
-          ],
-        };
       }
     },
   );
